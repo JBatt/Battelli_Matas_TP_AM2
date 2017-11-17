@@ -93,6 +93,20 @@ public class UnitsWindow : EditorWindow
 
         EditorGUILayout.EndToggleGroup();
 
+        
+        if (_name == null) _name = "Default";
+        if (_hp < 0) _hp = 0;
+        if (_atk < 0) _atk = 0;
+        if (_def < 0) _def = 0;
+        if (_spd < 0) _spd = 0;
+        if (_int < 0) _int = 0;
+        if (_acc < 0) _acc = 0;
+
+        if (GUILayout.Button("Create Class"))
+        {
+            ScriptableObjectUtility.CreateAsset<Mode>(_name + "Class", _acc, _atk, _def, _hp, _int, _spd);
+        }
+
     }
 
 }
