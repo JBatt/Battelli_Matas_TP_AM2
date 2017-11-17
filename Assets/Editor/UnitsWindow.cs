@@ -25,7 +25,7 @@ public class UnitsWindow : EditorWindow
    
     team _team;
 
-    private GameObject _goToPreview;
+    private GameObject _model;
     private Texture2D _preview;
 
     public enum type
@@ -37,7 +37,6 @@ public class UnitsWindow : EditorWindow
 
     public enum team
     {
-        None,
         Blue,
         Red,
         Green,
@@ -56,44 +55,41 @@ public class UnitsWindow : EditorWindow
     {
         _name = EditorGUILayout.TextField("Name", _name);
         _type = (type)EditorGUILayout.EnumPopup("Type", _type);
+        Debug.Log(_type);
 
-        _buildGroupEnabled = EditorGUILayout.BeginToggleGroup("(Si seleccionas build o unit)", _buildGroupEnabled);
-        _hp = EditorGUILayout.FloatField("HP", _hp);
-        EditorGUILayout.EndToggleGroup();
-
-        _unitGroupEnabled = EditorGUILayout.BeginToggleGroup("(Si seleccionas Unit)", _unitGroupEnabled);
-        _atk = EditorGUILayout.FloatField("ATK", _atk);
-        _def = EditorGUILayout.FloatField("DEF", _def);
-        _spd = EditorGUILayout.FloatField("SPD", _spd);
-        EditorGUILayout.EndToggleGroup();
-
+        if (_type == type.Building || _type == type.Unit)
+        {
+            EditorGUILayout.BeginFadeGroup(1);
+            _team = (team)EditorGUILayout.EnumPopup("Team", _team);
+            _hp = EditorGUILayout.FloatField("HP", _hp);
+            EditorGUILayout.EndFadeGroup();
+        }
+        if ( _type == type.Unit)
+        {
+            EditorGUILayout.BeginFadeGroup(1);
+            _atk = EditorGUILayout.FloatField("ATK", _atk);
+            _def = EditorGUILayout.FloatField("DEF", _def);
+            _spd = EditorGUILayout.FloatField("SPD", _spd);
+            EditorGUILayout.EndFadeGroup();
+        }
         
-
-        _team = (team)EditorGUILayout.EnumPopup("Team", _team);
-
-       
-
         GUILayout.Label("Model", EditorStyles.boldLabel);
-        _goToPreview = (GameObject)EditorGUILayout.ObjectField("Objeto: ", _goToPreview, typeof(GameObject), true);
-        _preview = AssetPreview.GetAssetPreview(_goToPreview);
+        _model = (GameObject)EditorGUILayout.ObjectField("Model: ", _model, typeof(GameObject), true);
+        _preview = AssetPreview.GetAssetPreview(_model);
         if (_preview != null)
         {
             Repaint();
             GUILayout.BeginHorizontal();
             GUI.DrawTexture(GUILayoutUtility.GetRect(50, 50, 50, 50), _preview, ScaleMode.ScaleToFit);
-            GUILayout.Label(_goToPreview.name);
-            GUILayout.Label(AssetDatabase.GetAssetPath(_goToPreview));
+            GUILayout.Label(_model.name);
+            GUILayout.Label(AssetDatabase.GetAssetPath(_model));
             GUILayout.EndHorizontal();
         }
         else
             EditorGUILayout.LabelField("No model");
 
-        _isEverythingSet = EditorGUILayout.BeginToggleGroup("(Una vez que este todo seteado apretar boton magico invisible que crea el SO)", _isEverythingSet);
+  
 
-
-        EditorGUILayout.EndToggleGroup();
-
-        
         if (_name == null) _name = "Default";
         if (_hp < 0) _hp = 0;
         if (_atk < 0) _atk = 0;
@@ -102,10 +98,16 @@ public class UnitsWindow : EditorWindow
         if (_int < 0) _int = 0;
         if (_acc < 0) _acc = 0;
 
-        if (GUILayout.Button("Create Class"))
+        if (_model == null)
         {
-            ScriptableObjectUtility.CreateAsset<Mode>(_name + "Class", _acc, _atk, _def, _hp, _int, _spd);
+            EditorGUILayout.BeginFadeGroup(1);
+            if (GUILayout.Button("Create " + _type))
+            {
+                ScriptableObjectUtility.CreateAsset<Mode>(_name , _acc, _atk, _def, _hp, _int, _spd, _model);
+            }
+            EditorGUILayout.EndFadeGroup();
         }
+       
 
     }
 

@@ -4,7 +4,7 @@ using System.IO;
 
 public static class ScriptableObjectUtility
 {
-    public static void CreateAsset<T>(string Name, float _hp, float _atk, float _def, float _spd, float _int, float _acc) where T : Mode
+    public static void CreateAsset<T>(string Name, float _hp, float _atk, float _def, float _spd, float _int, float _acc, GameObject _model) where T : Mode
     {
         T asset = ScriptableObject.CreateInstance<T>();
 
