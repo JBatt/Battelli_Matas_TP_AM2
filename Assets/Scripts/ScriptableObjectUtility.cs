@@ -4,21 +4,21 @@ using System.IO;
 
 public static class ScriptableObjectUtility
 {
-    public static void CreateAsset<T>(string Name, float _hp, float _atk, float _def, float _spd, float _int, float _acc, GameObject _model) where T : Mode
+    public static void CreateUnit<T>(string Name, float _hp, float _atk, float _def, float _spd, float _int, float _acc) where T : Unit
     {
-        T asset = ScriptableObject.CreateInstance<T>();
+        T unit = ScriptableObject.CreateInstance<T>();
 
-        asset._acc = _acc;
-        asset._atk = _atk;
-        asset._def = _def;
-        asset._hp = _hp;
-        asset._int = _int;
-        asset._spd = _spd;
+        unit._acc = _acc;
+        unit._atk = _atk;
+        unit._def = _def;
+        unit._hp = _hp;
+        unit._int = _int;
+        unit._spd = _spd;
         
 
-        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath("Assets/ScriptableObject/" + Name + ".asset");
+        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath("Assets/ScriptableObject/Unit/" + Name + ".asset");
 
-        AssetDatabase.CreateAsset(asset, assetPathAndName);
+        AssetDatabase.CreateAsset(unit, assetPathAndName);
 
         AssetDatabase.SaveAssets();
 
@@ -26,6 +26,27 @@ public static class ScriptableObjectUtility
 
         EditorUtility.FocusProjectWindow();
 
-        Selection.activeObject = asset;
+        Selection.activeObject = unit;
+    }
+    public static void CreateBuilding<T>(string Name,float _hp, float _def) where T : Building
+    {
+        T building = ScriptableObject.CreateInstance<T>();
+
+      
+        building._def = _def;
+        building._hp = _hp;
+        
+
+        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath("Assets/ScriptableObject/Building/" + Name + ".asset");
+
+        AssetDatabase.CreateAsset(building, assetPathAndName);
+
+        AssetDatabase.SaveAssets();
+
+        AssetDatabase.Refresh();
+
+        EditorUtility.FocusProjectWindow();
+
+        Selection.activeObject = building;
     }
 }
